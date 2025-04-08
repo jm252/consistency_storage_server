@@ -44,7 +44,6 @@ elif method == "POST":
         num_success  = update.get("num_success", 0)
         num_failure  = update.get("num_failure", 0)
 
-        # Load and lock the file
         data = {}
         try:
             with open(DATA_FILE, "r+") as f:
@@ -56,7 +55,6 @@ elif method == "POST":
         except FileNotFoundError:
             pass  
 
-        # Update in-memory data
         if edge_name not in data:
             data[edge_name] = {}
         if func_name not in data[edge_name]:
@@ -70,7 +68,6 @@ elif method == "POST":
         data[edge_name][func_name]["num_success"]  += num_success
         data[edge_name][func_name]["num_failure"]  += num_failure
 
-        # Write atomically to a temp file in the same dir
         with tempfile.NamedTemporaryFile('w', dir="/tmp", delete=False) as tmp_file:
             json.dump(data, tmp_file, indent=2)
             tempname = tmp_file.name
